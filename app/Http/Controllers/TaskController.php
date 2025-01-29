@@ -1,9 +1,9 @@
 <?php
 namespace App\Http\Controllers;
 
-use App\Http\Resources\TaskResource;
 use App\Models\Task;
 use Illuminate\Http\Request;
+use Illuminate\Http\Response;
 
 class TaskController extends Controller
 {
@@ -20,13 +20,13 @@ class TaskController extends Controller
     public function store(Request $request)
     {
         $request->validate([
-            'title'     => 'required',
-            'tag'       => 'required',
-            'completed' => 'required'
+            'title'     => ['required', 'string', 'max:100'],
+            'tag'       => ['required', 'string', 'max:25'],
+            'completed' => ['required', 'boolean']
         ]);
 
-        $post = Task::create($request->all());
-        return response()->json(new TaskResource($post), 201);
+        Task::create($request->all());
+        return response()->json(null, Response::HTTP_CREATED);
     }
 
     public function update(Request $request, $id)
